@@ -1,4 +1,11 @@
 <view class="weather-wrapper">
+  <view class="location-wrapper">
+    <view class="location">
+      <image class="location-icon" src="/images/location-icon.png"></image>
+      <view class="location-text">New York</view>
+    </view>
+    <view class="location-tips">Click to get the current location</view>
+  </view>
   <view class="temp">{{nowTemp}}</view>
   <view class="weather">{{nowWeather}}</view>
   <image class="weather-bg" src="{{nowWeatherBackground}}" mode="scaleToFill"></image>
