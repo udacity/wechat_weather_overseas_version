@@ -6,4 +6,4 @@ Welcome to this Nanodegree Program for WeChat Mini Program Developer. In this pr
 
 ## API
 
-[Click Here](https://github.com/wangzuowen/wechat-weather/blob/1-1/weather_api.md) to view the API for Weather Project
+[Click Here](./weather_api.md) to view the API for Weather Project
