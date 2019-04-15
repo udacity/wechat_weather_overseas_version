@@ -6,7 +6,10 @@ Page({
         city: 'newyork'
       },
       success: res => {
-        console.log(res)
+        let result = res.data.result
+        let temp = result.now.temp
+        let weather = result.now.weather
+        console.log(temp, weather)
       }
     })
   }
