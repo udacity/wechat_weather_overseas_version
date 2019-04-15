@@ -21,7 +21,7 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground: "",
-    forecast: [1,2,3,4,5,6,7,8,9]
+    forecast: []
   },
   onLoad() {
     this.getNow()
@@ -49,6 +49,21 @@ Page({
         wx.setNavigationBarColor({
           frontColor: '#000000',
           backgroundColor: weatherColorMap[weather],
+        })
+
+        //set forecast
+        let forecast = []
+        let nowHour = new Date().getHours()
+        for (let i = 0; i < 24; i += 3) {
+          forecast.push({
+            time: (i + nowHour) % 24 + ":00",
+            iconPath: '/images/sunny-icon.png',
+            temp: "12°"
+          })
+        }
+        forecast[0].time = 'Now'
+        this.setData({
+          forecast:forecast
         })
       },
       complete: () =>{
