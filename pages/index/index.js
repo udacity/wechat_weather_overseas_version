@@ -23,10 +23,18 @@ Page({
     nowWeatherBackground: ""
   },
   onLoad() {
+    this.getNow()
+  },
+  onPullDownRefresh(){
+    this.getNow(() => {
+      wx.stopPullDownRefresh()
+    })
+  },
+  getNow(callback){
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
       data: {
-        city: 'newyork'
+        city: '广州市'
       },
       success: res => {
         let result = res.data.result
@@ -41,6 +49,9 @@ Page({
           frontColor: '#000000',
           backgroundColor: weatherColorMap[weather],
         })
+      },
+      complete: () =>{
+        callback && callback()
       }
     })
   }
