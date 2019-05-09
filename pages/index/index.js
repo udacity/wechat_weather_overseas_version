@@ -28,12 +28,12 @@ Page({
   onLoad() {
     this.getNow()
   },
-  onPullDownRefresh(){
+  onPullDownRefresh() {
     this.getNow(() => {
       wx.stopPullDownRefresh()
     })
   },
-  getNow(callback){
+  getNow(callback) {
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
       data: {
@@ -45,12 +45,12 @@ Page({
         this.setHourlyWeather(result)
         this.setToday(result)
       },
-      complete: () =>{
+      complete: () => {
         callback && callback()
       }
     })
   },
-  setNow(result){
+  setNow(result) {
     let temp = result.now.temp
     let weather = result.now.weather
     this.setData({
@@ -63,13 +63,13 @@ Page({
       backgroundColor: weatherColorMap[weather],
     })
   },
-  setHourlyWeather(result){
+  setHourlyWeather(result) {
     let forecast = result.forecast
     let hourlyWeather = []
     let nowHour = new Date().getHours()
     for (let i = 0; i < 8; i += 1) {
       hourlyWeather.push({
-        time: (i*3 + nowHour) % 24 + ":00",
+        time: (i * 3 + nowHour) % 24 + ":00",
         iconPath: '/images/' + forecast[i].weather + '-icon.png',
         temp: forecast[i].temp + '°'
       })
@@ -83,19 +83,36 @@ Page({
     let date = new Date()
     this.setData({
       todayTemp: `${result.today.minTemp}° - ${result.today.maxTemp}°`,
-      todayDate: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} Today`
+      todayDate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} Today`
     })
   },
-  onTapDayWeather(){
+  onTapDayWeather() {
     wx.navigateTo({
       url: '/pages/list/list',
     })
   },
-  onTapLocation(){
+  onTapLocation() {
     wx.getLocation({
-      success: res=>{
-        console.log(res.latitude, res.longitude)
+      success: res => {
+        this.reverseGeocoder(res.latitude, res.longitude)
       },
+    })
+  },
+  reverseGeocoder(lat, lon) {
+    wx.request({
+      url: 'https://nominatim.openstreetmap.org/reverse',
+      data: {
+        format: "json",
+        lat,
+        lon,
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success(res) {
+        let city = `${res.data.address.city} - ${res.data.address.state}`;
+        console.log(city);
+      }
     })
   }
 })
