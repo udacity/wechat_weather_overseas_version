@@ -2,9 +2,13 @@ const dayMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 
 Page({
   date: {
-    weekWeather: []
+    weekWeather: [],
+    city: 'newyork'
   },
-  onLoad() {
+  onLoad(options) {
+    this.setData({
+      city: options.city
+    })
     this.getWeekWeather()
   },
   onPullDownRefresh() {
@@ -17,7 +21,7 @@ Page({
       url: 'https://test-miniprogram.com/api/weather/future',
       data: {
         time: new Date().getTime(),
-        city: "newyork"
+        city: this.data.city
       },
       success: res => {
         let result = res.data.result
