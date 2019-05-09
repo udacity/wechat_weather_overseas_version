@@ -23,7 +23,9 @@ Page({
     nowWeatherBackground: "",
     hourlyWeather: [],
     todayTemp: "",
-    todayDate: ""
+    todayDate: "",
+    city: 'New York',
+    locationTipsText: "click to get the current location"
   },
   onLoad() {
     this.getNow()
@@ -37,7 +39,7 @@ Page({
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
       data: {
-        city: 'newyork'
+        city: this.data.city
       },
       success: res => {
         let result = res.data.result
@@ -99,19 +101,24 @@ Page({
     })
   },
   reverseGeocoder(lat, lon) {
+    var that = this;
     wx.request({
       url: 'https://nominatim.openstreetmap.org/reverse',
       data: {
         format: "json",
-        lat,
-        lon,
+        lat: lat,
+        lon: lon,
       },
       header: {
         'content-type': 'application/json'
       },
       success(res) {
         let city = `${res.data.address.city} - ${res.data.address.state}`;
-        console.log(city);
+        that.setData({
+          city: city,
+          locationTipsText: ""
+        })
+        that.getNow()
       }
     })
   }

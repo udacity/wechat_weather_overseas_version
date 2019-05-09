@@ -28,6 +28,7 @@
 }
 
 .location-tips{
+  height: 42rpx; /*fixed height, there is height, whether or not there is a word*/
   margin-top:10rpx;
   text-align: center;
 }
