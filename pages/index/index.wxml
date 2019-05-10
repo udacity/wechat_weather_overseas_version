@@ -4,7 +4,10 @@
       <image class="location-icon" src="/images/location-icon.png"></image>
       <view class="location-text">{{city}}</view>
     </view>
-    <view class="location-tips">{{locationTipsText}}</view>
+        <!-- 0: no pop-up， 1: rejected， 2: approved -->
+    <view wx:if="{{locationAuthType==0}}" class="location-tips">click to get the current location</view>
+    <view wx:if="{{locationAuthType==1}}" class="location-tips">click to allow location permissions</view>
+    <view wx:if="{{locationAuthType==2}}" class="location-tips"></view>
   </button>
   <view class="temp">{{nowTemp}}</view>
   <view class="weather">{{nowWeather}}</view>

@@ -20,10 +20,6 @@ const UNPROMPTED = 0
 const UNAUTHORIZED = 1
 const AUTHORIZED = 2
 
-const UNPROMPTED_TIPS = "click to get the current location"
-const UNAUTHORIZED_TIPS = "click to allow location permissions"
-const AUTHORIZED_TIPS = ""
-
 Page({
   data: {
     nowTemp: '',
@@ -33,20 +29,15 @@ Page({
     todayTemp: "",
     todayDate: "",
     city: 'New York',
-    locationTipsText: UNPROMPTED_TIPS,
     locationAuthType: UNPROMPTED
   },
   onLoad() {
     wx.getSetting({
       success: res => {
         let auth = res.authSetting['scope.userLocation']
-        let locationAuthType = auth ? AUTHORIZED
-          : (auth === false) ? UNAUTHORIZED : UNPROMPTED
-        let locationTipsText = auth ? AUTHORIZED_TIPS
-          : (auth === false) ? UNAUTHORIZED_TIPS : UNPROMPTED_TIPS
         this.setData({
-          locationAuthType: locationAuthType,
-          locationTipsText: locationTipsText
+          locationAuthType: auth ? AUTHORIZED
+            : (auth === false) ? UNAUTHORIZED : UNPROMPTED
         })
 
         if (auth)
@@ -140,15 +131,13 @@ Page({
     wx.getLocation({
       success: res => {
         this.setData({
-          locationAuthType: AUTHORIZED,
-          locationTipsText: AUTHORIZED_TIPS
+          locationAuthType: AUTHORIZED
         })
         this.reverseGeocoder(res.latitude, res.longitude)
       },
       fail: () => {
         this.setData({
-          locationAuthType: UNAUTHORIZED,
-          locationTipsText: UNAUTHORIZED_TIPS
+          locationAuthType: UNAUTHORIZED
         })
       }
     })
