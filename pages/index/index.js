@@ -37,7 +37,27 @@ Page({
     locationAuthType: UNPROMPTED
   },
   onLoad() {
-    this.getNow()
+    wx.getSetting({
+      success: res => {
+        let auth = res.authSetting['scope.userLocation']
+        let locationAuthType = auth ? AUTHORIZED
+          : (auth === false) ? UNAUTHORIZED : UNPROMPTED
+        let locationTipsText = auth ? AUTHORIZED_TIPS
+          : (auth === false) ? UNAUTHORIZED_TIPS : UNPROMPTED_TIPS
+        this.setData({
+          locationAuthType: locationAuthType,
+          locationTipsText: locationTipsText
+        })
+
+        if (auth)
+          this.getCityAndWeather()
+        else
+          this.getNow() // default city - New York
+      },
+      fail: () => {
+        this.getNow() // default city - New York
+      }
+    })
   },
   onPullDownRefresh() {
     this.getNow(() => {
@@ -108,15 +128,15 @@ Page({
         success: res => {
           let auth = res.authSetting["scope.userLocation"]
           if (auth) {
-            this.getLocation()
+            this.getCityAndWeather()
           }
         }
       })
     } else {
-      this.getLocation()
+      this.getCityAndWeather()
     }
   },
-  getLocation() {
+  getCityAndWeather() {
     wx.getLocation({
       success: res => {
         this.setData({
