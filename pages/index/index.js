@@ -16,6 +16,14 @@ const weatherColorMap = {
   'snow': '#aae1fc'
 }
 
+const UNPROMPTED = 0
+const UNAUTHORIZED = 1
+const AUTHORIZED = 2
+
+const UNPROMPTED_TIPS = "click to get the current location"
+const UNAUTHORIZED_TIPS = "click to allow location permissions"
+const AUTHORIZED_TIPS = ""
+
 Page({
   data: {
     nowTemp: '',
@@ -25,7 +33,8 @@ Page({
     todayTemp: "",
     todayDate: "",
     city: 'New York',
-    locationTipsText: "click to get the current location"
+    locationTipsText: UNPROMPTED_TIPS,
+    locationAuthType: UNPROMPTED
   },
   onLoad() {
     this.getNow()
@@ -94,10 +103,27 @@ Page({
     })
   },
   onTapLocation() {
+    if (this.data.locationAuthType === UNAUTHORIZED) {
+      wx.openSetting()
+    } else {
+      this.getLocation()
+    }
+  },
+  getLocation() {
     wx.getLocation({
       success: res => {
+        this.setData({
+          locationAuthType: AUTHORIZED,
+          locationTipsText: AUTHORIZED_TIPS
+        })
         this.reverseGeocoder(res.latitude, res.longitude)
       },
+      fail: () => {
+        this.setData({
+          locationAuthType: UNAUTHORIZED,
+          locationTipsText: UNAUTHORIZED_TIPS
+        })
+      }
     })
   },
   reverseGeocoder(lat, lon) {
@@ -113,7 +139,7 @@ Page({
         'content-type': 'application/json'
       },
       success(res) {
-        let city = `${res.data.address.city} - ${res.data.address.state}`;
+        let city = res.data.address.city;
         that.setData({
           city: city,
           locationTipsText: ""
