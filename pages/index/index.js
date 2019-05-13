@@ -113,7 +113,7 @@ Page({
         'content-type': 'application/json'
       },
       success(res) {
-        let city = `${res.data.address.city} - ${res.data.address.state}`;
+        let city = res.data.address.city;
         that.setData({
           city: city,
           locationTipsText: ""
